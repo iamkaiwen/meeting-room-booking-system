@@ -42,11 +42,11 @@ def home():
 
 @app.route('/accounts', methods=['POST'])
 def accounts():
-    return uSys.create(request.form)
+    return uSys.create(request.form.to_dict())
 
 @app.route('/login', methods=['POST'])
 def login():
-    resp = uSys.login(request.form)
+    resp = uSys.login(request.form.to_dict())
     if resp[0] == "Login success":
         session['name'] = resp[1]
         session['email'] = request.form['email']

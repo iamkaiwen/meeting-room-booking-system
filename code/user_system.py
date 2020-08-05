@@ -1,3 +1,4 @@
+import hashlib
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -5,7 +6,7 @@ create_table_sql = (
     "CREATE TABLE IF NOT EXISTS accounts ("
     "   name varchar(20) NOT NULL,"
     "   email varchar(50) NOT NULL PRIMARY KEY,"
-    "   password varchar(50) NOT NULL,"
+    "   password varchar(128) NOT NULL,"
     "   role ENUM('user', 'admin') DEFAULT 'user' NOT NULL"
     ");"
 )
@@ -50,6 +51,11 @@ class UserSystem:
         if not self._check(form, self._create_requirements):
             return ("Missing parameters", 400)
 
+        # Hash password
+        hashobj = hashlib.sha3_512()
+        hashobj.update(form['password'].encode())
+        form['password'] = hashobj.hexdigest()
+
         # Create a user account
         try:
             cursor = self._cnx.cursor()
@@ -71,6 +77,11 @@ class UserSystem:
     def login(self, form):
         if not self._check(form, self._login_requirements):
             return ("Missing parameters", 400)
+
+        # Hash password
+        hashobj = hashlib.sha3_512()
+        hashobj.update(form['password'].encode())
+        form['password'] = hashobj.hexdigest()
 
         # Login to a user account
         try:
