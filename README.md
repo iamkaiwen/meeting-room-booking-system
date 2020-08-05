@@ -9,7 +9,7 @@ cd meeting-room-booking-system
 4. Build up the system  
 It costs almost 2.5 mins at the first time.
 ```
-docker-compose --build
+docker-compose up
 ```
 5. Ready for usage
 ![Build Success](build_success.png) 
